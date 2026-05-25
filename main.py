@@ -1,29 +1,34 @@
 from fastapi import FastAPI
+from pydantic import BaseModel
+
 app = FastAPI()
 
-Lista_Clientes = [{"nombre": "Juan",
-                    "edad": 25,
-                    "descripcion": "n.a"},
-                    {"nombre": "Maria",
-                    "edad": 30,
-                    "descripcion": "n.a"}]
+lista_clientes = []
 
-@app.get("/cliente")
-def Cliente_Nuevo():
-    return {"Hello": "Hola Cliente nuevo"}
+#crear Clase MODELO
+class Cliente(BaseModel):
+    Id: int
+    nombre: str
+    edad: int
+    descripcion: str 
 
-@app.get("/Lista_Clientes")
-def Lista_Clientes():
-    return {"Clientes": Lista_Clientes}
 
-@app.post("/Crear_Clientes")
-def Crear_Clientes():
-    return {"message": "Cliente creado exitosamente"}
+@app.get("/clientes")
+def listar_clientes(datos_cliente:  Cliente):
+    return {"clientes": lista_clientes}
 
-@app.put("/Editar_Clientes")
-def Editar_Clientes():
-    return {"message": "Cliente editado exitosamente"}
 
-@app.delete("/Eliminar_Clientes")
-def Eliminar_Clientes():
-    return {"message": "Cliente eliminado exitosamente"}
+@app.post("/clientes")
+def crear_clientes(datos_cliente:  Cliente):
+    lista_clientes.append(datos_cliente)
+    return {"mensaje": "Cliente creado"}
+
+
+@app.put("/clientes")
+def editar_clientes():
+    return {"mensaje": "Cliente Editado"}
+
+
+@app.delete("/clientes")
+def eliminar_clientes():
+    return {"mensaje": "Cliente eliminado"}
